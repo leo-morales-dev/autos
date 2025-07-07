@@ -25,7 +25,7 @@ export interface Modelo {
 
 @Injectable({ providedIn: 'root' })
 export class AutosService {
-  private baseUrl = 'http://localhost:4000/api';
+  private baseUrl = 'https://autos-backend-p2st.onrender.com/api';
   private httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
   constructor(private http: HttpClient) {}
