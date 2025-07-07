@@ -1,0 +1,72 @@
+<div class="container my-4">
+  <h2>Editar Auto</h2>
+  <form [formGroup]="autoForm" (ngSubmit)="onSubmit()">
+
+    <!-- Marca (readonly) -->
+    <div class="mb-3">
+      <label class="form-label">Marca</label>
+      <input class="form-control" [value]="marca.name" readonly />
+    </div>
+
+    <!-- Modelo existente -->
+    <div class="mb-3">
+      <label class="form-label">Modelo existente</label>
+      <select class="form-select" formControlName="modelo">
+        <option value="">-- elige modelo --</option>
+        <option *ngFor="let m of modelos" [value]="m._id">{{ m.name }}</option>
+      </select>
+      <div *ngIf="enviado && f['modelo'].errors?.['required']" class="text-danger">
+        Debes seleccionar un modelo
+      </div>
+    </div>
+
+    <!-- Renombrar modelo -->
+    <div class="mb-3">
+      <label class="form-label">Renombrar modelo (opcional)</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="newModelo"
+        placeholder="Nuevo nombre de modelo"
+      />
+      <small class="form-text text-muted">
+        Si dejas vacío, se conserva el nombre actual.
+      </small>
+    </div>
+
+    <!-- Año -->
+    <div class="mb-3">
+      <label class="form-label">Año</label>
+      <input
+        type="number"
+        class="form-control"
+        formControlName="anio"
+        [placeholder]="'1980 – ' + currentYear"
+      />
+      <div *ngIf="enviado && f['anio'].errors?.['required']" class="text-danger">
+        Año obligatorio
+      </div>
+      <div *ngIf="enviado && f['anio'].errors?.['min']" class="text-danger">
+        Año mínimo 1980
+      </div>
+      <div *ngIf="enviado && f['anio'].errors?.['max']" class="text-danger">
+        Año máximo {{ currentYear }}
+      </div>
+    </div>
+
+    <!-- Precio -->
+    <div class="mb-3">
+      <label class="form-label">Precio</label>
+      <input
+        type="number"
+        class="form-control"
+        formControlName="precio"
+      />
+      <div *ngIf="enviado && f['precio'].errors?.['required']" class="text-danger">
+        Precio obligatorio
+      </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+  </form>
+</div>

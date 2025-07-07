@@ -1,0 +1,151 @@
+<!-- src/app/pages/agregar-autos/agregar-autos.html -->
+<div class="container my-4">
+  <h2>Agregar Auto</h2>
+  <form [formGroup]="autoForm" (ngSubmit)="onSubmit()">
+
+    <!-- NUEVA MARCA -->
+    <div class="mb-3">
+      <label class="form-label">Nueva Marca</label>
+      <div class="input-group mb-2">
+        <input
+          [(ngModel)]="newMarca"
+          name="newMarca"
+          [ngModelOptions]="{ standalone: true }"
+          class="form-control"
+          placeholder="Nombre de marca"
+        />
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="addMarca()"
+        >
+          Agregar
+        </button>
+      </div>
+      <div>
+        <span
+          *ngFor="let m of marcas; let i = index"
+          class="badge bg-secondary me-1"
+        >
+          {{ m.name }}
+          <button
+            type="button"
+            class="btn-close btn-close-white btn-sm ms-1"
+            aria-label="Eliminar marca"
+            (click)="removeMarca(m._id!, i)"
+          ></button>
+        </span>
+      </div>
+
+      <label class="form-label mt-2">Seleccionar Marca</label>
+      <select
+        formControlName="marca"
+        class="form-select"
+        (change)="onMarcaChange($event)"
+      >
+        <option value="">-- elige marca --</option>
+        <option *ngFor="let m of marcas" [value]="m._id">{{ m.name }}</option>
+      </select>
+      <div
+        *ngIf="enviado && f['marca'].errors?.['required']"
+        class="text-danger"
+      >
+        Debes seleccionar una marca
+      </div>
+    </div>
+
+    <!-- NUEVO MODELO -->
+    <div class="mb-3">
+      <label class="form-label">Nuevo Modelo</label>
+      <div class="input-group mb-2">
+        <input
+          [(ngModel)]="newModelo"
+          name="newModelo"
+          [ngModelOptions]="{ standalone: true }"
+          class="form-control"
+          placeholder="Nombre de modelo"
+        />
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="addModelo()"
+        >
+          Agregar
+        </button>
+      </div>
+      <div>
+        <span
+          *ngFor="let md of modelos; let j = index"
+          class="badge bg-secondary me-1"
+        >
+          {{ md.name }}
+          <button
+            type="button"
+            class="btn-close btn-close-white btn-sm ms-1"
+            aria-label="Eliminar modelo"
+            (click)="removeModelo(md._id!, j)"
+          ></button>
+        </span>
+      </div>
+
+      <label class="form-label mt-2">Seleccionar Modelo</label>
+      <select formControlName="modelo" class="form-select">
+        <option value="">-- elige modelo --</option>
+        <option *ngFor="let md of modelos" [value]="md._id">
+          {{ md.name }}
+        </option>
+      </select>
+      <div
+        *ngIf="enviado && f['modelo'].errors?.['required']"
+        class="text-danger"
+      >
+        Debes seleccionar un modelo
+      </div>
+    </div>
+
+    <!-- AÑO -->
+    <div class="mb-3">
+      <label class="form-label">Año</label>
+      <input
+        type="number"
+        formControlName="anio"
+        class="form-control no-spinner"
+        [attr.placeholder]="'1980 – ' + currentYear"
+      />
+      <div *ngIf="enviado && f['anio'].errors?.['required']" class="text-danger">
+        Año obligatorio
+      </div>
+      <div *ngIf="enviado && f['anio'].errors?.['min']" class="text-danger">
+        Año mínimo 1980
+      </div>
+      <div *ngIf="enviado && f['anio'].errors?.['max']" class="text-danger">
+        Año máximo {{ currentYear }}
+      </div>
+    </div>
+
+    <!-- PRECIO -->
+    <div class="mb-3">
+      <label class="form-label">Precio</label>
+      <input
+        type="number"
+        formControlName="precio"
+        class="form-control"
+        placeholder="50000 – 10000000"
+      />
+      <div
+        *ngIf="enviado && f['precio'].errors?.['required']"
+        class="text-danger"
+      >
+        Precio obligatorio
+      </div>
+      <div *ngIf="enviado && f['precio'].errors?.['min']" class="text-danger">
+        Precio mínimo 50000
+      </div>
+      <div *ngIf="enviado && f['precio'].errors?.['max']" class="text-danger">
+        Precio máximo 10000000
+      </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Agregar Auto</button>
+  </form>
+</div>

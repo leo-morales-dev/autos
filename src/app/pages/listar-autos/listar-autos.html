@@ -1,0 +1,53 @@
+<!-- src/app/pages/listar-autos/listar-autos.html -->
+<div class="container my-4">
+  <h2>Listado de Autos</h2>
+
+  <div *ngIf="autos.length === 0" class="text-center">
+    No hay autos
+  </div>
+
+  <table *ngIf="autos.length > 0" class="table table-bordered">
+    <thead class="table-success">
+      <tr>
+        <th>ID</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Año</th>
+        <th>Precio</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let auto of autos; let i = index">
+        <td>{{ auto._id }}</td>
+        <td>{{ auto.marca.name }}</td>
+        <td>{{ auto.modelo.name }}</td>
+        <td>{{ auto.anio }}</td>
+        <td>{{ auto.precio }}</td>
+        <td>{{ auto.disponible ? 'Disponible' : 'Vendido' }}</td>
+        <td>
+          <a
+            [routerLink]="['/editar-autos', auto._id]"
+            class="btn btn-warning btn-sm"
+          >
+            Editar
+          </a>
+          <button
+            class="btn btn-sm"
+            [ngClass]="auto.disponible ? 'btn-danger' : 'btn-success'"
+            (click)="toggleEstado(auto, i)"
+          >
+            {{ auto.disponible ? 'Marcar Vendido' : 'Marcar Disponible' }}
+          </button>
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="eliminar(auto, i)"
+          >
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
