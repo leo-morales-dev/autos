@@ -22,7 +22,8 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               { "glob": "**/*", "input": "public", "output": "/" },
-              { "glob": "**/*", "input": "src/assets", "output": "/assets" }
+              { "glob": "**/*", "input": "src/assets", "output": "/assets" },
+              "src/_redirects"
             ],
             "styles": [
               "src/styles.css"
@@ -69,7 +70,8 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               { "glob": "**/*", "input": "public", "output": "/" },
-              { "glob": "**/*", "input": "src/assets", "output": "/assets" }
+              { "glob": "**/*", "input": "src/assets", "output": "/assets" },
+              "src/_redirects"
             ],
             "styles": ["src/styles.css"],
             "scripts": []
