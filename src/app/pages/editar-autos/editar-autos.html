@@ -1,19 +1,32 @@
-<div class="container my-4">
+<!-- src/app/pages/editar-autos/editar-autos.html -->
+<div class="container my-4 editar-auto-form">
   <h2>Editar Auto</h2>
   <form [formGroup]="autoForm" (ngSubmit)="onSubmit()">
 
     <!-- Marca (readonly) -->
     <div class="mb-3">
-      <label class="form-label">Marca</label>
-      <input class="form-control" [value]="marca.name" readonly />
+      <label for="marca" class="form-label">Marca</label>
+      <input
+        type="text"
+        id="marca"
+        class="form-control"
+        [value]="marca.name"
+        readonly
+      />
     </div>
 
     <!-- Modelo existente -->
     <div class="mb-3">
-      <label class="form-label">Modelo existente</label>
-      <select class="form-select" formControlName="modelo">
+      <label for="modeloExistente" class="form-label">Modelo existente</label>
+      <select
+        id="modeloExistente"
+        class="form-select"
+        formControlName="modelo"
+      >
         <option value="">-- elige modelo --</option>
-        <option *ngFor="let m of modelos" [value]="m._id">{{ m.name }}</option>
+        <option *ngFor="let m of modelos" [value]="m._id">
+          {{ m.name }}
+        </option>
       </select>
       <div *ngIf="enviado && f['modelo'].errors?.['required']" class="text-danger">
         Debes seleccionar un modelo
@@ -22,26 +35,32 @@
 
     <!-- Renombrar modelo -->
     <div class="mb-3">
-      <label class="form-label">Renombrar modelo (opcional)</label>
+      <label for="newModelo" class="form-label">
+        Renombrar modelo <small>(opcional)</small>
+      </label>
       <input
         type="text"
+        id="newModelo"
         class="form-control"
         formControlName="newModelo"
         placeholder="Nuevo nombre de modelo"
       />
-      <small class="form-text text-muted">
+      <div class="form-text">
         Si dejas vacío, se conserva el nombre actual.
-      </small>
+      </div>
     </div>
 
     <!-- Año -->
     <div class="mb-3">
-      <label class="form-label">Año</label>
+      <label for="anio" class="form-label">Año</label>
       <input
         type="number"
+        id="anio"
         class="form-control"
         formControlName="anio"
-        [placeholder]="'1980 – ' + currentYear"
+        placeholder="1980 – {{ currentYear }}"
+        min="1980"
+        [max]="currentYear"
       />
       <div *ngIf="enviado && f['anio'].errors?.['required']" class="text-danger">
         Año obligatorio
@@ -56,11 +75,15 @@
 
     <!-- Precio -->
     <div class="mb-3">
-      <label class="form-label">Precio</label>
+      <label for="precio" class="form-label">Precio</label>
       <input
         type="number"
+        id="precio"
         class="form-control"
         formControlName="precio"
+        placeholder="50000 – 10000000"
+        min="50000"
+        max="10000000"
       />
       <div *ngIf="enviado && f['precio'].errors?.['required']" class="text-danger">
         Precio obligatorio
