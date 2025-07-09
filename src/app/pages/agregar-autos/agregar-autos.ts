@@ -1,5 +1,3 @@
-// src/app/pages/agregar-autos/agregar-autos.ts
-
 import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -25,13 +23,16 @@ import {
 })
 export class AgregarAutosComponent implements OnInit {
   autoForm: FormGroup;
-  enviado = false;
-
-  marcas: Marca[] = [];
-  modelos: Modelo[] = [];
-  newMarca = '';
-  newModelo = '';
+  enviado     = false;
+  marcas      : Marca[]  = [];
+  modelos     : Modelo[] = [];
+  newMarca    = '';
+  newModelo   = '';
   currentYear = new Date().getFullYear();
+
+  // Props para alertas
+  alertMessage: string | null = null;
+  alertType   : 'danger' | 'success' = 'danger';
 
   constructor(
     private fb: FormBuilder,
@@ -40,31 +41,17 @@ export class AgregarAutosComponent implements OnInit {
     private autosService: AutosService
   ) {
     this.autoForm = this.fb.group({
-      marca: ['', Validators.required],
-      modelo: ['', Validators.required],
-      anio: [
-        null,
-        [
-          Validators.required,
-          Validators.min(1980),
-          Validators.max(this.currentYear)
-        ]
-      ],
-      precio: [
-        null,
-        [
-          Validators.required,
-          Validators.min(50000),
-          Validators.max(10000000)
-        ]
-      ]
+      marca:   ['',   Validators.required],
+      modelo:  ['',   Validators.required],
+      anio:    [null, [Validators.required, Validators.min(1980), Validators.max(this.currentYear)]],
+      precio:  [null, [Validators.required, Validators.min(50000), Validators.max(10000000)]],
     });
   }
 
   ngOnInit(): void {
     this.autosService.getMarcas().subscribe({
-      next: data => (this.marcas = data),
-      error: err => console.error('Error al cargar marcas', err)
+      next: data => this.marcas = data,
+      error: ()   => this.showAlert('danger', 'Error cargando marcas.')
     });
   }
 
@@ -72,25 +59,29 @@ export class AgregarAutosComponent implements OnInit {
     const marcaId = (event.target as HTMLSelectElement).value;
     this.autoForm.patchValue({ marca: marcaId, modelo: '' });
     this.modelos = [];
-    if (marcaId) {
-      this.autosService.getModelos(marcaId).subscribe({
-        next: data => (this.modelos = data),
-        error: err => console.error('Error al cargar modelos', err)
-      });
-    }
+    if (!marcaId) return;
+    this.autosService.getModelos(marcaId).subscribe({
+      next: data => this.modelos = data,
+      error: ()   => this.showAlert('danger', 'Error cargando modelos.')
+    });
   }
 
   addMarca(): void {
     const name = this.newMarca.trim();
-    if (!name) return;
+    if (!name) {
+      this.showAlert('danger', 'Debes ingresar el nombre de la nueva marca.');
+      return;
+    }
     this.autosService.addMarca(name).subscribe({
       next: marca => {
         this.marcas.push(marca);
         this.autoForm.patchValue({ marca: marca._id });
         this.newMarca = '';
-        this.modelos = [];
+        this.modelos  = [];
+        // no mostramos alerta de éxito para marca
+        this.clearAlert();
       },
-      error: err => console.error('Error al agregar marca', err)
+      error: () => this.showAlert('danger', 'No se pudo agregar la marca.')
     });
   }
 
@@ -102,22 +93,36 @@ export class AgregarAutosComponent implements OnInit {
           this.autoForm.patchValue({ marca: '', modelo: '' });
           this.modelos = [];
         }
+        // no mostramos alerta de éxito
+        this.clearAlert();
       },
-      error: err => console.error('Error al eliminar marca', err)
+      error: () => this.showAlert(
+        'danger',
+        'No se puede eliminar esta marca porque hay autos registrados con ella.'
+      )
     });
   }
 
   addModelo(): void {
-    const name = this.newModelo.trim();
+    const name    = this.newModelo.trim();
     const marcaId = this.autoForm.value.marca;
-    if (!name || !marcaId) return;
+    if (!name) {
+      this.showAlert('danger', 'Debes ingresar el nombre del nuevo modelo.');
+      return;
+    }
+    if (!marcaId) {
+      this.showAlert('danger', 'Selecciona primero una marca antes de agregar un modelo.');
+      return;
+    }
     this.autosService.addModelo(name, marcaId).subscribe({
       next: modelo => {
         this.modelos.push(modelo);
         this.autoForm.patchValue({ modelo: modelo._id });
         this.newModelo = '';
+        // no mostramos alerta de éxito para modelo
+        this.clearAlert();
       },
-      error: err => console.error('Error al agregar modelo', err)
+      error: () => this.showAlert('danger', 'No se pudo agregar el modelo.')
     });
   }
 
@@ -128,8 +133,12 @@ export class AgregarAutosComponent implements OnInit {
         if (this.autoForm.value.modelo === id) {
           this.autoForm.patchValue({ modelo: '' });
         }
+        this.clearAlert();
       },
-      error: err => console.error('Error al eliminar modelo', err)
+      error: () => this.showAlert(
+        'danger',
+        'No se puede eliminar este modelo porque hay autos registrados con él.'
+      )
     });
   }
 
@@ -139,14 +148,25 @@ export class AgregarAutosComponent implements OnInit {
 
   onSubmit(): void {
     this.enviado = true;
-    if (this.autoForm.invalid) return;
-    this.autosService
-      .agregarAuto(this.autoForm.value)
-      .subscribe({
-        next: auto => console.log('Auto agregado:', auto),
-        complete: () =>
-          this.ngZone.run(() => this.router.navigateByUrl('/listar-autos')),
-        error: err => console.error('Error al agregar auto', err)
-      });
+    if (this.autoForm.invalid) {
+      this.showAlert('danger', 'Completa correctamente todos los campos antes de enviar.');
+      return;
+    }
+    this.clearAlert();
+    this.autosService.agregarAuto(this.autoForm.value).subscribe({
+      next: ()   => this.showAlert('success', 'Auto agregado correctamente.'),
+      complete: () => this.ngZone.run(() => this.router.navigateByUrl('/listar-autos')),
+      error: ()  => this.showAlert('danger', 'Ocurrió un error al agregar el auto.')
+    });
+  }
+
+  private showAlert(type: 'danger' | 'success', msg: string) {
+    this.alertType    = type;
+    this.alertMessage = msg;
+    setTimeout(() => this.clearAlert(), 5000);
+  }
+
+  private clearAlert() {
+    this.alertMessage = null;
   }
 }
