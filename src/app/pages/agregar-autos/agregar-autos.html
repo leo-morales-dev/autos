@@ -1,18 +1,25 @@
-<!-- src/app/pages/agregar-autos/agregar-autos.html -->
-<div class="container my-4">
+<div class="container my-4 editar-auto-form">
   <h2>Agregar Auto</h2>
+
+  <!-- ALERTA -->
+  <div *ngIf="alertMessage" class="alert alert-{{ alertType }}" role="alert">
+    {{ alertMessage }}
+  </div>
+
   <form [formGroup]="autoForm" (ngSubmit)="onSubmit()">
 
-    <!-- NUEVA MARCA -->
+    <!-- Nueva Marca -->
     <div class="mb-3">
-      <label class="form-label">Nueva Marca</label>
+      <label for="newMarca" class="form-label">Nueva Marca</label>
       <div class="input-group mb-2">
         <input
+          type="text"
+          id="newMarca"
+          class="form-control"
+          placeholder="Nombre de marca"
           [(ngModel)]="newMarca"
           name="newMarca"
           [ngModelOptions]="{ standalone: true }"
-          class="form-control"
-          placeholder="Nombre de marca"
         />
         <button
           type="button"
@@ -22,11 +29,8 @@
           Agregar
         </button>
       </div>
-      <div>
-        <span
-          *ngFor="let m of marcas; let i = index"
-          class="badge bg-secondary me-1"
-        >
+      <div class="mb-2">
+        <span *ngFor="let m of marcas; let i = index" class="badge bg-secondary me-1">
           {{ m.name }}
           <button
             type="button"
@@ -37,33 +41,33 @@
         </span>
       </div>
 
-      <label class="form-label mt-2">Seleccionar Marca</label>
+      <label for="selectMarca" class="form-label">Seleccionar Marca</label>
       <select
-        formControlName="marca"
+        id="selectMarca"
         class="form-select"
+        formControlName="marca"
         (change)="onMarcaChange($event)"
       >
         <option value="">-- elige marca --</option>
         <option *ngFor="let m of marcas" [value]="m._id">{{ m.name }}</option>
       </select>
-      <div
-        *ngIf="enviado && f['marca'].errors?.['required']"
-        class="text-danger"
-      >
+      <div *ngIf="enviado && f['marca'].errors?.['required']" class="text-danger">
         Debes seleccionar una marca
       </div>
     </div>
 
-    <!-- NUEVO MODELO -->
+    <!-- Nuevo Modelo -->
     <div class="mb-3">
-      <label class="form-label">Nuevo Modelo</label>
+      <label for="newModelo" class="form-label">Nuevo Modelo</label>
       <div class="input-group mb-2">
         <input
+          type="text"
+          id="newModelo"
+          class="form-control"
+          placeholder="Nombre de modelo"
           [(ngModel)]="newModelo"
           name="newModelo"
           [ngModelOptions]="{ standalone: true }"
-          class="form-control"
-          placeholder="Nombre de modelo"
         />
         <button
           type="button"
@@ -73,11 +77,8 @@
           Agregar
         </button>
       </div>
-      <div>
-        <span
-          *ngFor="let md of modelos; let j = index"
-          class="badge bg-secondary me-1"
-        >
+      <div class="mb-2">
+        <span *ngFor="let md of modelos; let j = index" class="badge bg-secondary me-1">
           {{ md.name }}
           <button
             type="button"
@@ -88,29 +89,31 @@
         </span>
       </div>
 
-      <label class="form-label mt-2">Seleccionar Modelo</label>
-      <select formControlName="modelo" class="form-select">
-        <option value="">-- elige modelo --</option>
-        <option *ngFor="let md of modelos" [value]="md._id">
-          {{ md.name }}
-        </option>
-      </select>
-      <div
-        *ngIf="enviado && f['modelo'].errors?.['required']"
-        class="text-danger"
+      <label for="selectModelo" class="form-label">Seleccionar Modelo</label>
+      <select
+        id="selectModelo"
+        class="form-select"
+        formControlName="modelo"
       >
+        <option value="">-- elige modelo --</option>
+        <option *ngFor="let md of modelos" [value]="md._id">{{ md.name }}</option>
+      </select>
+      <div *ngIf="enviado && f['modelo'].errors?.['required']" class="text-danger">
         Debes seleccionar un modelo
       </div>
     </div>
 
-    <!-- AÑO -->
+    <!-- Año -->
     <div class="mb-3">
-      <label class="form-label">Año</label>
+      <label for="anio" class="form-label">Año</label>
       <input
         type="number"
+        id="anio"
+        class="form-control"
         formControlName="anio"
-        class="form-control no-spinner"
-        [attr.placeholder]="'1980 – ' + currentYear"
+        placeholder="1980 – {{ currentYear }}"
+        min="1980"
+        [max]="currentYear"
       />
       <div *ngIf="enviado && f['anio'].errors?.['required']" class="text-danger">
         Año obligatorio
@@ -123,19 +126,19 @@
       </div>
     </div>
 
-    <!-- PRECIO -->
+    <!-- Precio -->
     <div class="mb-3">
-      <label class="form-label">Precio</label>
+      <label for="precio" class="form-label">Precio</label>
       <input
         type="number"
-        formControlName="precio"
+        id="precio"
         class="form-control"
+        formControlName="precio"
         placeholder="50000 – 10000000"
+        min="50000"
+        max="10000000"
       />
-      <div
-        *ngIf="enviado && f['precio'].errors?.['required']"
-        class="text-danger"
-      >
+      <div *ngIf="enviado && f['precio'].errors?.['required']" class="text-danger">
         Precio obligatorio
       </div>
       <div *ngIf="enviado && f['precio'].errors?.['min']" class="text-danger">
