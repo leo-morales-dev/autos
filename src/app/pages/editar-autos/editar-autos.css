@@ -1,0 +1,47 @@
+/* Inputs y selects con fondo azul oscuro y texto claro */
+.editar-auto-form .form-control,
+.editar-auto-form .form-select {
+  background-color: #404954 !important;
+  color: #AAB8C5 !important;
+  border-color: #2c323a;
+}
+
+/* Placeholder en color más claro */
+.editar-auto-form .form-control::placeholder,
+.editar-auto-form .form-select::placeholder {
+  color: #aab8c5 !important;
+  opacity: 1; /* Para asegurar visibilidad en todos los navegadores */
+}
+
+/* Al enfocar, mantiene esquema de color */
+.editar-auto-form .form-control:focus,
+.editar-auto-form .form-select:focus {
+  background-color: #404954 !important;
+  color: #AAB8C5 !important;
+  border-color: #5a6574;
+  box-shadow: 0 0 0 0.2rem rgba(164, 184, 197, 0.25);
+}
+
+/* Texto de las labels un poco más claro */
+.editar-auto-form .form-label {
+  color: #edf2f7;
+}
+
+/* Texto de ayuda y “(opcional)” más claro */
+.editar-auto-form .form-text,
+.editar-auto-form .form-label small {
+  color: #adb5bd !important; /* Gris claro de Bootstrap */
+  font-weight: 400;          /* Si quieres un poco más de grosor */
+}
+
+.editar-auto-form {
+  background-color: #2b2e3a;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  color: #edf2f7;
+}
+
+.editar-auto-form h2 {
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
