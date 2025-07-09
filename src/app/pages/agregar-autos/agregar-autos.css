@@ -1,0 +1,40 @@
+.editar-auto-form {
+  background-color: #2b2e3a;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  color: #edf2f7;
+}
+
+.editar-auto-form h2 {
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+/* Inputs y selects */
+.editar-auto-form .form-control,
+.editar-auto-form .form-select {
+  background-color: #404954;
+  color: #AAB8C5;
+  border-color: #2c323a;
+}
+
+.editar-auto-form .form-label {
+  color: #edf2f7;
+}
+
+.editar-auto-form .form-text,
+.editar-auto-form .form-label small {
+  color: #adb5bd !important;
+}
+
+/* Estilo personalizado para alert-danger */
+.alert-danger {
+  background-color: #2d1f26;   /* fondo oscuro */
+  border: 1px solid #d9534f;   /* borde rojo intenso */
+  color: #f8d7da;              /* texto claro */
+}
+
+/* Para que el “×” de cerrar también sea claro */
+.alert-danger .btn-close {
+  filter: invert(1);
+}
